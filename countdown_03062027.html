@@ -1,26 +1,243 @@
 <!DOCTYPE html>
 <html lang="hr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Odbrojavanje do 03.06.2027. 07:00</title>
-<style>
-body{margin:0;height:100vh;display:flex;justify-content:center;align-items:center;background:#111827;color:#fff;font-family:Arial,sans-serif}.container{text-align:center}h1{margin-bottom:40px}.countdown{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}.box{background:#1f2937;padding:20px;border-radius:15px;min-width:120px}.number{font-size:3rem;font-weight:bold}.label{margin-top:5px;font-size:1rem;color:#9ca3af}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Odbrojavanje do 03.06.2027. u 07:00</title>
+  <style>
+    :root {
+      --grass-1: #0d3b2f;
+      --grass-2: #145a3d;
+      --grass-3: #1b7f55;
+      --field: #1f9d62;
+      --accent: #f7d84b;
+      --accent-2: #f4f1eb;
+      --dark: #0b0f12;
+      --panel: rgba(7, 18, 14, 0.72);
+      --panel-border: rgba(255, 255, 255, 0.18);
+      --text: #ffffff;
+      --muted: #dfeee7;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.12), transparent 30%),
+        linear-gradient(180deg, #0f2b22 0%, #0b231a 30%, #081910 100%);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          180deg,
+          rgba(255,255,255,0.03),
+          rgba(255,255,255,0.03) 2px,
+          transparent 2px,
+          transparent 14px
+        );
+      pointer-events: none;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      inset: 10% 15% 12%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 55%);
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: min(90vw, 820px);
+      text-align: center;
+      background: var(--panel);
+      border: 2px solid var(--panel-border);
+      border-radius: 28px;
+      padding: 34px 28px 26px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+    }
+
+    .top-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 8px 18px;
+      margin-bottom: 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-size: 0.75rem;
+    }
+
+    .ball {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f3f3f3 18%, #e8e8e8 35%, #d7d7d7 100%);
+      box-shadow: inset -4px -4px 0 rgba(0, 0, 0, 0.08), 0 0 12px rgba(255,255,255,0.18);
+      position: relative;
+    }
+
+    .ball::before,
+    .ball::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+    }
+
+    .ball::before {
+      background: linear-gradient(90deg, transparent 0 46%, #1d1d1d 46% 54%, transparent 54% 100%);
+      transform: rotate(18deg);
+    }
+
+    .ball::after {
+      background: linear-gradient(180deg, transparent 0 46%, #1d1d1d 46% 54%, transparent 54% 100%);
+      transform: rotate(18deg);
+    }
+
+    h1 {
+      margin: 0 0 26px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.15;
+      letter-spacing: 0.5px;
+      color: var(--accent-2);
+      text-shadow: 0 6px 18px rgba(0,0,0,0.30);
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .box {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 20px 12px 16px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .number {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 10px;
+      text-shadow: 0 0 18px rgba(247,216,75,0.28);
+    }
+
+    .label {
+      font-size: 0.88rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .footer-note {
+      margin-top: 22px;
+      font-size: 0.96rem;
+      color: rgba(255,255,255,0.78);
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 620px) {
+      .container {
+        padding: 28px 16px 20px;
+      }
+
+      .countdown {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-<h1>Odbrojavanje do 03.06.2027. u 07:00</h1>
-<div class="countdown">
-<div class="box"><div id="days" class="number">0</div><div class="label">Dana</div></div>
-<div class="box"><div id="hours" class="number">0</div><div class="label">Sati</div></div>
-<div class="box"><div id="minutes" class="number">0</div><div class="label">Minuta</div></div>
-<div class="box"><div id="seconds" class="number">0</div><div class="label">Sekundi</div></div>
-</div></div>
-<script>
-const targetDate=new Date('2027-06-03T07:00:00+02:00');
-function updateCountdown(){const now=new Date();const diff=targetDate-now;if(diff<=0){document.body.innerHTML='<h1 style="color:white;">Vrijeme je stiglo!</h1>';return;}const days=Math.floor(diff/(1000*60*60*24));const hours=Math.floor((diff/(1000*60*60))%24);const minutes=Math.floor((diff/(1000*60))%60);const seconds=Math.floor((diff/1000)%60);document.getElementById('days').textContent=days;document.getElementById('hours').textContent=hours;document.getElementById('minutes').textContent=minutes;document.getElementById('seconds').textContent=seconds;}
-updateCountdown();setInterval(updateCountdown,1000);
-</script>
+  <div class="container">
+    <div class="top-badge"><span class="ball"></span> Nogometni odbrojavanje</div>
+    <h1>Do 03.06.2027. u 07:00</h1>
+
+    <div class="countdown">
+      <div class="box">
+        <div id="days" class="number">0</div>
+        <div class="label">Dana</div>
+      </div>
+      <div class="box">
+        <div id="hours" class="number">0</div>
+        <div class="label">Sati</div>
+      </div>
+      <div class="box">
+        <div id="minutes" class="number">0</div>
+        <div class="label">Minuta</div>
+      </div>
+      <div class="box">
+        <div id="seconds" class="number">0</div>
+        <div class="label">Sekundi</div>
+      </div>
+    </div>
+
+    <div class="footer-note">Preostalo do velikog dana na terenu.</div>
+  </div>
+
+  <script>
+    const targetDate = new Date('2027-06-03T07:00:00+02:00');
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.querySelector('.container').innerHTML = `
+          <div class="top-badge"><span class="ball"></span> Svaka čast</div>
+          <h1 style="margin-bottom: 0;">Vrijeme je stiglo!</h1>
+          <div class="footer-note" style="margin-top: 18px;">Dani, sati, minute i sekunde su završili — utakmica je počela!</div>
+        `;
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / (60 * 60 * 24));
+      const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+      const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+      const seconds = totalSeconds % 60;
+
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = hours;
+      document.getElementById('minutes').textContent = minutes;
+      document.getElementById('seconds').textContent = seconds;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
 </body>
 </html>
